@@ -55,13 +55,11 @@ namespace LAB_2018PR603_2019AM604.Controllers
         {
             var data = await _context.Departamentos.FindAsync(request.id);
             
-            data.departamento = request.departamento;
+            data!.departamento = request.departamento;
 
             await _context.SaveChangesAsync();
 
             return Ok(data);
         }
-
-
     }
 }
