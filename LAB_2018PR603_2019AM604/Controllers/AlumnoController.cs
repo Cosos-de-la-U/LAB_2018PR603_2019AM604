@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using LAB_2018PR603_2019AM604.Data;
 using LAB_2018PR603_2019AM604.Models;
@@ -25,15 +26,22 @@ namespace LAB_2018PR603_2019AM604.Controllers
             //Get
             [HttpGet]
             public async Task<ActionResult<List<Alumno>>> Get()
-            {
-                return Ok(await _context.Alumnos.ToListAsync());
+            { 
+                var data = from a in _context.Alumnos
+                    join d in _context.Departamentos on a.departamentoId equals d.id
+                    select new{a.id,a.carnet, a.nombre, a.apellidos, a.dui, d.departamento, a.estado};
+
+                return Ok(data);
             }
         
             //Get id
             [HttpGet("{id}")]
             public async Task<ActionResult<List<Alumno>>> Get(int id)
             {
-                var data= _context.Alumnos.FindAsync(id);
+                var data = (from a in _context.Alumnos
+                    join d in _context.Departamentos on a.departamentoId equals d.id
+                    select new{a.id,a.carnet, a.nombre, a.apellidos, a.dui, d.departamento, a.estado}).FirstOrDefault();
+
                 if (data == null) 
                     return BadRequest();
                 return Ok(data);

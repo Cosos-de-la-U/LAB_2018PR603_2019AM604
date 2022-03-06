@@ -26,14 +26,24 @@ namespace LAB_2018PR603_2019AM604.Controllers
             [HttpGet]
             public async Task<ActionResult<List<Nota>>> Get()
             {
-                return Ok(await _context.Notas.ToListAsync());
+                var data = from n in _context.Notas
+                    join i in _context.Inscripciones on n.inscripcionId equals i.id
+                    join a in _context.Alumnos on i.alumnoId equals a.id 
+                    join m in _context.Materias on i.materiaId equals m.id
+                    select new{n.id, a.nombre, a.apellidos, m.materia, n.evaluacion, n.nota, n.porcentaje, n.fecha};
+
+                return Ok(data);
             }
         
             //Get id
             [HttpGet("{id}")]
             public async Task<ActionResult<List<Nota>>> Get(int id)
             {
-                var data= _context.Notas.FindAsync(id);
+                var data = (from n in _context.Notas
+                    join i in _context.Inscripciones on n.inscripcionId equals i.id
+                    join a in _context.Alumnos on i.alumnoId equals a.id 
+                    join m in _context.Materias on i.materiaId equals m.id
+                    select new{n.id, a.nombre, a.apellidos, m.materia, n.evaluacion, n.nota, n.porcentaje, n.fecha}).FirstOrDefault();
                 if (data == null) 
                     return BadRequest();
                 return Ok(data);
@@ -55,7 +65,6 @@ namespace LAB_2018PR603_2019AM604.Controllers
             {
                 var data = await _context.Notas.FindAsync(request.id);
 
-                data.inscripcionId = request.inscripcionId;
                 data.evaluacion = request.evaluacion;
                 data.nota = request.nota;
                 data.porcentaje = request.porcentaje;

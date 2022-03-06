@@ -26,14 +26,14 @@ namespace LAB_2018PR603_2019AM604.Controllers
             [HttpGet]
             public async Task<ActionResult<List<Facultad>>> Get()
             {
-                return Ok(await _context.Facultades.ToListAsync());
+                return Ok(await _context.Facultad.ToListAsync());
             }
         
             //Get id
             [HttpGet("{id}")]
             public async Task<ActionResult<List<Facultad>>> Get(int id)
             {
-                var data= _context.Facultades.FindAsync(id);
+                var data= _context.Facultad.FindAsync(id);
                 if (data == null) 
                     return BadRequest();
                 return Ok(data);
@@ -43,17 +43,17 @@ namespace LAB_2018PR603_2019AM604.Controllers
             [HttpPost]
             public async Task<ActionResult<List<Facultad>>> Post(Facultad data)
             {
-                _context.Facultades.Add(data);
+                _context.Facultad.Add(data);
                 await _context.SaveChangesAsync();
 
-                return Ok(await _context.Facultades.ToListAsync());
+                return Ok(await _context.Facultad.ToListAsync());
             }
         
             //Put
             [HttpPut]
             public async Task<ActionResult<List<Facultad>>> Put(Facultad request)
             {
-                var data = await _context.Facultades.FindAsync(request.id);
+                var data = await _context.Facultad.FindAsync(request.id);
 
                 data.facultad= request.facultad;
 
